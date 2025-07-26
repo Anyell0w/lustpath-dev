@@ -12,51 +12,149 @@
                     colors: {
                         'sky-light': '#e0f2fe',
                         'sky-medium': '#0ea5e9',
-                        'sky-dark': '#0284c7'
+                        'sky-dark': '#0284c7',
+                        'primary': '#0f172a',
+                        'secondary': '#1e293b'
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(30px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' }
+                        }
                     }
                 }
             }
         }
     </script>
 </head>
-<body class="bg-gradient-to-br from-sky-light to-blue-100 min-h-screen flex items-center justify-center">
-    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
-        <div class="text-center mb-8">
-            <div class="bg-sky-medium text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <img src="./logo.png" alt="">
+<body class="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-sky-900 relative overflow-hidden">
+    <!-- Animated Background Elements -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-sky-400/10 animate-float"></div>
+        <div class="absolute top-1/2 -left-40 w-60 h-60 rounded-full bg-blue-400/10 animate-pulse-slow"></div>
+        <div class="absolute bottom-20 right-20 w-40 h-40 rounded-full bg-slate-300/5 animate-float" style="animation-delay: -2s;"></div>
+    </div>
+
+    <!-- Grid Pattern Overlay -->
+    <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.1) 1px, transparent 0); background-size: 50px 50px;"></div>
+
+    <div class="relative min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-md">
+            <!-- Logo and Brand Section -->
+            <div class="text-center mb-8 animate-fade-in">
+                <div class="relative inline-block">
+                    <div class="bg-gradient-to-br from-sky-400 to-blue-600 text-white w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <!-- Glow effect -->
+                    <div class="absolute inset-0 bg-sky-400/20 rounded-2xl blur-xl transform scale-110"></div>
+                </div>
+                <h1 class="text-4xl font-bold text-white mb-2 tracking-tight">LustPath</h1>
+                <p class="text-blue-200 text-lg">Sistema de Gestión de Expedientes Judiciales</p>
+                <div class="mt-4 h-1 w-20 bg-gradient-to-r from-sky-400 to-blue-500 mx-auto rounded-full"></div>
             </div>
-            <h1 class="text-2xl font-bold text-gray-800">LustPath</h1>
-            <p class="text-gray-600 mt-2">Sistema de Gestión de Expedientes Judiciales</p>
-        </div>
 
-        <form id="loginForm" class="space-y-6">
-            <div>
-                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Correo Electrónico</label>
-                <input type="email" id="email" name="email" required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-medium focus:border-transparent transition-all duration-200"
-                    placeholder="usuario@ejemplo.com">
+            <!-- Login Card -->
+            <div class="bg-white/95 backdrop-blur-sm p-8 rounded-3xl shadow-2xl border border-white/20 animate-slide-up">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Bienvenido de vuelta</h2>
+                    <p class="text-gray-600">Ingresa tus credenciales para continuar</p>
+                </div>
+
+                <form id="loginForm" class="space-y-6">
+                    <div class="space-y-2">
+                        <label for="email" class="block text-sm font-semibold text-gray-700">Correo Electrónico</label>
+                        <div class="relative">
+                            <input type="email" id="email" name="email" required
+                                class="w-full px-4 py-4 pl-12 border border-gray-200 rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all duration-200 bg-gray-50/50 hover:bg-white"
+                                placeholder="usuario@ejemplo.com">
+                            <svg class="absolute left-4 top-4 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="password" class="block text-sm font-semibold text-gray-700">Contraseña</label>
+                        <div class="relative">
+                            <input type="password" id="password" name="password" required
+                                class="w-full px-4 py-4 pl-12 border border-gray-200 rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all duration-200 bg-gray-50/50 hover:bg-white"
+                                placeholder="••••••••">
+                            <svg class="absolute left-4 top-4 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <button type="submit" 
+                        class="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl focus:ring-4 focus:ring-sky-500/25">
+                        <div class="flex items-center justify-center space-x-2">
+                            <span>Iniciar Sesión</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                            </svg>
+                        </div>
+                    </button>
+                </form>
+
+                <div id="error-message" class="mt-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl hidden animate-slide-up">
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span id="error-text"></span>
+                    </div>
+                </div>
+
+                <!-- Demo Credentials -->
+                <div class="mt-8 p-6 bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl border border-gray-100">
+                    <div class="flex items-start space-x-3">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Credenciales de prueba</h3>
+                            <div class="space-y-1 text-sm">
+                                <p class="text-gray-700">
+                                    <span class="font-medium text-gray-900">Admin:</span> 
+                                    <span class="font-mono bg-white px-2 py-1 rounded">admin@lustpath.com</span>
+                                </p>
+                                <p class="text-gray-700">
+                                    <span class="font-medium text-gray-900">Contraseña:</span> 
+                                    <span class="font-mono bg-white px-2 py-1 rounded">admin123</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Contraseña</label>
-                <input type="password" id="password" name="password" required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-medium focus:border-transparent transition-all duration-200"
-                    placeholder="••••••••">
+            <!-- Footer -->
+            <div class="text-center mt-8 animate-fade-in" style="animation-delay: 0.3s;">
+                <p class="text-blue-200/80 text-sm">
+                    © 2024 LustPath. Todos los derechos reservados.
+                </p>
             </div>
-
-            <button type="submit" 
-                class="w-full bg-sky-medium hover:bg-sky-dark text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 transform hover:scale-105">
-                Iniciar Sesión
-            </button>
-        </form>
-
-        <div id="error-message" class="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg hidden"></div>
-
-        <div class="mt-8 p-4 bg-gray-50 rounded-lg">
-            <h3 class="font-semibold text-gray-700 mb-2">Credenciales de prueba:</h3>
-            <p class="text-sm text-gray-600">
-                <strong>Admin:</strong> admin@lustpath.com / admin123
-            </p>
         </div>
     </div>
 
@@ -66,6 +164,20 @@
             
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData);
+            
+            // Add loading state
+            const submitButton = e.target.querySelector('button[type="submit"]');
+            const originalContent = submitButton.innerHTML;
+            submitButton.innerHTML = `
+                <div class="flex items-center justify-center space-x-2">
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>Iniciando sesión...</span>
+                </div>
+            `;
+            submitButton.disabled = true;
             
             try {
                 const response = await fetch('/login', {
@@ -79,23 +191,52 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    window.location.href = result.redirect;
+                    // Success animation
+                    submitButton.innerHTML = `
+                        <div class="flex items-center justify-center space-x-2">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>¡Éxito!</span>
+                        </div>
+                    `;
+                    setTimeout(() => {
+                        window.location.href = result.redirect;
+                    }, 1000);
                 } else {
                     showError(result.error || 'Error de autenticación');
+                    submitButton.innerHTML = originalContent;
+                    submitButton.disabled = false;
                 }
             } catch (error) {
                 showError('Error de conexión');
+                submitButton.innerHTML = originalContent;
+                submitButton.disabled = false;
             }
         });
 
         function showError(message) {
             const errorDiv = document.getElementById('error-message');
-            errorDiv.textContent = message;
+            const errorText = document.getElementById('error-text');
+            errorText.textContent = message;
             errorDiv.classList.remove('hidden');
+            
+            // Auto hide after 5 seconds
             setTimeout(() => {
                 errorDiv.classList.add('hidden');
             }, 5000);
         }
+
+        // Add focus animations
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('transform', 'scale-[1.02]');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('transform', 'scale-[1.02]');
+            });
+        });
     </script>
 </body>
 </html>
