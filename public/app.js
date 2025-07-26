@@ -9,33 +9,24 @@ let currentDeriveExpediente = null;
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', async () => {
-      try {
-         // Primero verificar si el usuario está autenticado
-         const authCheck = await fetch('/api/auth/check');
-         if (!authCheck.ok) {
-               window.location.href = '/login';
-               return;
-         }
-
-         // Si está autenticado, cargar el resto de la aplicación
-         await loadUserInfo();
-         await loadReferenceData();
-         await loadExpedientes();
-         await loadDashboardStats();
-         setupEventListeners();
-         
-         // Show dashboard by default
-         showTab('dashboard');
-      } catch (error) {
-         console.error('Error:', error);
-         window.location.href = '/login';
-      }
+    await loadUserInfo();
+    await loadReferenceData();
+    await loadExpedientes();
+    await loadDashboardStats();
+    setupEventListeners();
+    
+    // Show dashboard by default
+    showTab('dashboard');
 });
 
 // Load user information
 async function loadUserInfo() {
     try {
         const response = await fetch('/api/user');
+        if (response.status === 401) { // No autorizado
+               window.location.href = '/login';
+               return;
+        }
         currentUser = await response.json();
         
         document.getElementById('user-name').textContent = currentUser.nombre;
@@ -51,6 +42,7 @@ async function loadUserInfo() {
         }
     } catch (error) {
         console.error('Error loading user info:', error);
+        window.location.href = '/login'; // Redirect to login on error
     }
 }
 
