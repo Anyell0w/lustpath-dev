@@ -308,10 +308,8 @@ app.post('/api/expedientes', requireAuth, (req, res) => {
       return res.status(400).json({ error: 'Distrito judicial no válido' });
     }
     
-    // Generar el código completo del expediente
     
-    // Verificar que no existe el código completo
-    db.get('SELECT cod_expediente FROM Expediente WHERE cod_expediente = ?', [codigoCompleto], (err, existing) => {
+    db.get('SELECT cod_expediente FROM Expediente WHERE cod_expediente = ?',  (err, existing) => {
       if (err) {
         return res.status(500).json({ error: err.message });
       }
@@ -328,13 +326,13 @@ app.post('/api/expedientes', requireAuth, (req, res) => {
       `;
 
       db.run(query, [
-        codigoCompleto, año_expediente, distrito_judicial_id,
+        año_expediente, distrito_judicial_id,
         fecha_vencimiento, sumilla, observaciones, monto_demanda, req.session.user.id_usuario
       ], function(err) {
         if (err) {
           return res.status(500).json({ error: err.message });
         }
-        res.json({ success: true, cod_expediente: codigoCompleto });
+        res.json({ success: true });
       });
     });
   });
