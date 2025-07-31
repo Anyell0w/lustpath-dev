@@ -272,48 +272,8 @@ app.get('/api/dashboard/stats', requireAuth, (req, res) => {
   });
 });
 
-// Nueva función de validación simplificada
-function validateExpedienteCode(cod_expediente, año_expediente, distrito_id) {
-  const errors = [];
-  
-  // Verificar que el código de expediente no esté vacío
-  if (!cod_expediente || cod_expediente.trim() === '') {
-    errors.push('El código de expediente es obligatorio');
-    return errors;
-  }
-  
-  // Verificar que sea alfanumérico y tenga longitud razonable (3-20 caracteres)
-  const codeRegex = /^[A-Za-z0-9\-_]{3,20}$/;
-  if (!codeRegex.test(cod_expediente)) {
-    errors.push('El código debe contener solo letras, números, guiones y guiones bajos (3-20 caracteres)');
-  }
-  
-  // Validar año
-  if (!año_expediente) {
-    errors.push('El año es obligatorio');
-  } else {
-    const currentYear = new Date().getFullYear();
-    const expedienteYear = parseInt(año_expediente);
-    
-    if (isNaN(expedienteYear)) {
-      errors.push('El año debe ser un número válido');
-    } else if (expedienteYear < 2000 || expedienteYear > currentYear + 1) {
-      errors.push(`El año debe estar entre 2000 y ${currentYear + 1}`);
-    }
-  }
-  
-  // Validar distrito judicial
-  if (!distrito_id) {
-    errors.push('El distrito judicial es obligatorio');
-  }
-  
-  return errors;
-}
 
 // Función para generar código completo del expediente
-function generateFullExpedienteCode(cod_expediente, año_expediente, distrito_codigo) {
-  return `${cod_expediente}-${año_expediente}-${distrito_codigo}`;
-}
 
 app.get('/api/expedientes/:cod', requireAuth, (req, res) => {
   const query = `
@@ -342,12 +302,6 @@ app.post('/api/expedientes', requireAuth, (req, res) => {
   } = req.body;
 
   // Validar los datos básicos
-  const validationErrors = validateExpedienteCode(cod_expediente, año_expediente, distrito_judicial_id);
-  
-  if (validationErrors.length > 0) {
-    return res.status(400).json({ error: validationErrors.join('; ') });
-  }
-
   // Verificar que el distrito existe y obtener su código
   db.get('SELECT id_distrito, codigo_distrito FROM DistritoJudicial WHERE id_distrito = ?', [distrito_judicial_id], (err, distrito) => {
     if (err || !distrito) {
@@ -355,7 +309,6 @@ app.post('/api/expedientes', requireAuth, (req, res) => {
     }
     
     // Generar el código completo del expediente
-    const codigoCompleto = generateFullExpedienteCode(cod_expediente, año_expediente, distrito.codigo_distrito);
     
     // Verificar que no existe el código completo
     db.get('SELECT cod_expediente FROM Expediente WHERE cod_expediente = ?', [codigoCompleto], (err, existing) => {
@@ -388,41 +341,6 @@ app.post('/api/expedientes', requireAuth, (req, res) => {
 });
 
 // API para validar código de expediente en tiempo real
-app.post('/api/expedientes/validate-code', requireAuth, (req, res) => {
-  const { cod_expediente, año_expediente, distrito_judicial_id } = req.body;
-  
-  const errors = validateExpedienteCode(cod_expediente, año_expediente, distrito_judicial_id);
-  
-  if (errors.length > 0) {
-    return res.json({ valid: false, errors });
-  }
-  
-  // Obtener el código del distrito para generar el código completo
-  db.get('SELECT codigo_distrito FROM DistritoJudicial WHERE id_distrito = ?', [distrito_judicial_id], (err, distrito) => {
-    if (err || !distrito) {
-      return res.json({ valid: false, errors: ['Distrito judicial no válido'] });
-    }
-    
-    const codigoCompleto = generateFullExpedienteCode(cod_expediente, año_expediente, distrito.codigo_distrito);
-    
-    // Verificar si ya existe
-    db.get('SELECT cod_expediente FROM Expediente WHERE cod_expediente = ?', [codigoCompleto], (err, existing) => {
-      if (err) {
-        return res.status(500).json({ error: err.message });
-      }
-      
-      if (existing) {
-        return res.json({ valid: false, errors: ['Ya existe un expediente con este código completo'] });
-      }
-      
-      res.json({ 
-        valid: true, 
-        errors: [], 
-        codigo_completo: codigoCompleto 
-      });
-    });
-  });
-});
 
 app.put('/api/expedientes/:cod', requireAuth, (req, res) => {
   const {
