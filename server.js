@@ -82,11 +82,15 @@ db.serialize(() => {
     last_login DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
-  // Tabla Expediente - Simplificada
+  // Tabla Expediente
   db.run(`CREATE TABLE IF NOT EXISTS Expediente (
     cod_expediente VARCHAR(20) PRIMARY KEY,
     año_inicio CHAR(4) NOT NULL,
+    mes_inicio CHAR(2) NOT NULL,
     distrito_judicial_id INTEGER,
+    numero_secuencial CHAR(3) NOT NULL,
+    organo_jurisdiccional_id INTEGER,
+    clase_procedimiento CHAR(1),
     estado_expediente VARCHAR(50) DEFAULT 'ACTIVO',
     fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
     fecha_vencimiento DATE,
@@ -95,6 +99,7 @@ db.serialize(() => {
     monto_demanda DECIMAL(15,2),
     usuario_creador INTEGER,
     FOREIGN KEY (distrito_judicial_id) REFERENCES DistritoJudicial(id_distrito),
+    FOREIGN KEY (organo_jurisdiccional_id) REFERENCES OrganoJurisdiccional(id_organismo),
     FOREIGN KEY (usuario_creador) REFERENCES Usuario(id_usuario)
   )`);
 
@@ -112,7 +117,7 @@ db.serialize(() => {
     FOREIGN KEY (usuario_subida) REFERENCES Usuario(id_usuario)
   )`);
 
-  // Tabla DerivacionExpediente
+  // Tabla DerivacionExpediente (nueva para derivaciones)
   db.run(`CREATE TABLE IF NOT EXISTS DerivacionExpediente (
     id_derivacion INTEGER PRIMARY KEY AUTOINCREMENT,
     cod_expediente VARCHAR(20),
@@ -130,9 +135,12 @@ db.serialize(() => {
 
   // Insertar datos iniciales
   const distritos = [
+    ['Lima', 'LIM'], ['Callao', 'CAL'], ['Arequipa', 'ARE'], ['Trujillo', 'TRU'],
+    ['Cusco', 'CUS'], ['Piura', 'PIU'], ['Ica', 'ICA'], ['Lambayeque', 'LAM']
   ];
 
   const organismos = [
+    ['Juzgado Civil', 'JC'], ['Juzgado Penal', 'JP'], ['Juzgado Laboral', 'JL'],
     ['Juzgado de Familia', 'JF'], ['Sala Civil', 'SC'], ['Sala Penal', 'SP']
   ];
 
@@ -199,9 +207,10 @@ app.get('/', requireAuth, (req, res) => {
 // API Routes para expedientes
 app.get('/api/expedientes', requireAuth, (req, res) => {
   const query = `
-    SELECT e.*, dj.nombre_distrito, u.nombre as usuario_creador
+    SELECT e.*, dj.nombre_distrito, oj.nombre_organismo, u.nombre as usuario_creador
     FROM Expediente e
     LEFT JOIN DistritoJudicial dj ON e.distrito_judicial_id = dj.id_distrito
+    LEFT JOIN OrganoJurisdiccional oj ON e.organo_jurisdiccional_id = oj.id_organismo
     LEFT JOIN Usuario u ON e.usuario_creador = u.id_usuario
     ORDER BY e.fecha_registro DESC
   `;
@@ -269,14 +278,12 @@ app.get('/api/dashboard/stats', requireAuth, (req, res) => {
   });
 });
 
-
-// Función para generar código completo del expediente
-
 app.get('/api/expedientes/:cod', requireAuth, (req, res) => {
   const query = `
-    SELECT e.*, dj.nombre_distrito, dj.codigo_distrito, u.nombre as usuario_creador
+    SELECT e.*, dj.nombre_distrito, oj.nombre_organismo, u.nombre as usuario_creador
     FROM Expediente e
     LEFT JOIN DistritoJudicial dj ON e.distrito_judicial_id = dj.id_distrito
+    LEFT JOIN OrganoJurisdiccional oj ON e.organo_jurisdiccional_id = oj.id_organismo
     LEFT JOIN Usuario u ON e.usuario_creador = u.id_usuario
     WHERE e.cod_expediente = ?
   `;
@@ -294,64 +301,74 @@ app.get('/api/expedientes/:cod', requireAuth, (req, res) => {
 
 app.post('/api/expedientes', requireAuth, (req, res) => {
   const {
-    cod_expediente, año_inicio, distrito_judicial_id,
+    cod_expediente, año_inicio, mes_inicio, distrito_judicial_id,
+    numero_secuencial, organo_jurisdiccional_id, clase_procedimiento,
     fecha_vencimiento, sumilla, observaciones, monto_demanda
   } = req.body;
 
-  // Validar los datos básicos
-  // Verificar que el distrito existe y obtener su código
-  db.get('SELECT id_distrito, codigo_distrito FROM DistritoJudicial WHERE id_distrito = ?', [distrito_judicial_id], (err, distrito) => {
+  // Verificar que el distrito y organismo existen
+  db.get('SELECT id_distrito FROM DistritoJudicial WHERE id_distrito = ?', [distrito_judicial_id], (err, distrito) => {
     if (err || !distrito) {
       return res.status(400).json({ error: 'Distrito judicial no válido' });
     }
     
-    
-    db.get('SELECT cod_expediente FROM Expediente WHERE cod_expediente = ?',  (err, existing) => {
-      if (err) {
-        return res.status(500).json({ error: err.message });
-      }
-      if (existing) {
-        return res.status(400).json({ error: 'Ya existe un expediente con este código completo' });
+    db.get('SELECT id_organismo FROM OrganoJurisdiccional WHERE id_organismo = ?', [organo_jurisdiccional_id], (err, organismo) => {
+      if (err || !organismo) {
+        return res.status(400).json({ error: 'Órgano jurisdiccional no válido' });
       }
       
-      // Insertar expediente
-      const query = `
-        INSERT INTO Expediente (
-          cod_expediente, año_inicio, distrito_judicial_id,
-          fecha_vencimiento, sumilla, observaciones, monto_demanda, usuario_creador
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-      `;
-
-      db.run(query, [
-        año_inicio, distrito_judicial_id,
-        fecha_vencimiento, sumilla, observaciones, monto_demanda, req.session.user.id_usuario
-      ], function(err) {
+      // Verificar que no existe el código
+      db.get('SELECT cod_expediente FROM Expediente WHERE cod_expediente = ?', [cod_expediente], (err, existing) => {
         if (err) {
           return res.status(500).json({ error: err.message });
         }
-        res.json({ success: true });
+        if (existing) {
+          return res.status(400).json({ error: 'Ya existe un expediente con este código' });
+        }
+        
+        // Insertar expediente
+        const query = `
+          INSERT INTO Expediente (
+            cod_expediente, año_inicio, mes_inicio, distrito_judicial_id,
+            numero_secuencial, organo_jurisdiccional_id, clase_procedimiento,
+            fecha_vencimiento, sumilla, observaciones, monto_demanda, usuario_creador
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+
+        db.run(query, [
+          cod_expediente, año_inicio, mes_inicio, distrito_judicial_id,
+          numero_secuencial, organo_jurisdiccional_id, clase_procedimiento,
+          fecha_vencimiento, sumilla, observaciones, monto_demanda, req.session.user.id_usuario
+        ], function(err) {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          res.json({ success: true, cod_expediente });
+        });
       });
     });
   });
 });
 
-// API para validar código de expediente en tiempo real
-
 app.put('/api/expedientes/:cod', requireAuth, (req, res) => {
   const {
-    año_inicio, distrito_judicial_id, estado_expediente,
+    año_inicio, mes_inicio, distrito_judicial_id, numero_secuencial,
+    organo_jurisdiccional_id, clase_procedimiento, estado_expediente,
     fecha_vencimiento, sumilla, observaciones, monto_demanda
   } = req.body;
 
   const query = `
     UPDATE Expediente SET
-      año_inicio = ?, distrito_judicial_id = ?, estado_expediente = ?,
+      año_inicio = ?, mes_inicio = ?, distrito_judicial_id = ?,
+      numero_secuencial = ?, organo_jurisdiccional_id = ?,
+      clase_procedimiento = ?, estado_expediente = ?,
       fecha_vencimiento = ?, sumilla = ?, observaciones = ?, monto_demanda = ?
     WHERE cod_expediente = ?
   `;
 
   db.run(query, [
-    año_inicio, distrito_judicial_id, estado_expediente,
+    año_inicio, mes_inicio, distrito_judicial_id, numero_secuencial,
+    organo_jurisdiccional_id, clase_procedimiento, estado_expediente,
     fecha_vencimiento, sumilla, observaciones, monto_demanda, req.params.cod
   ], function(err) {
     if (err) {
@@ -594,7 +611,6 @@ app.put('/api/derivaciones/:id/rechazar', requireAuth, (req, res) => {
     res.json({ success: true });
   });
 });
-
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

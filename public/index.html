@@ -1,611 +1,667 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LustPath - Gestión de Expedientes</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'sage': {
-                            50: '#f6f7f6',
-                            100: '#e3e8e3',
-                            200: '#c7d2c7',
-                            300: '#a3b5a3',
-                            400: '#7a947a',
-                            500: '#5c7a5c',
-                            600: '#486148',
-                            700: '#3c4f3c',
-                            800: '#334033',
-                            900: '#2d362d'
-                        },
-                        'lavender': {
-                            50: '#f8f7ff',
-                            100: '#f0edff',
-                            200: '#e4deff',
-                            300: '#d1c4ff',
-                            400: '#b89fff',
-                            500: '#9d75ff',
-                            600: '#8b5cf6',
-                            700: '#7c3aed',
-                            800: '#6d28d9',
-                            900: '#5b21b6'
-                        },
-                        'cream': {
-                            50: '#fefdfb',
-                            100: '#fdf9f0',
-                            200: '#faf2e1',
-                            300: '#f5e6c8',
-                            400: '#eed5a3',
-                            500: '#e4c078',
-                            600: '#d4a853',
-                            700: '#b8923d',
-                            800: '#957635',
-                            900: '#7a612f'
-                        },
-                        'powder': {
-                            50: '#f8fafc',
-                            100: '#f1f5f9',
-                            200: '#e2e8f0',
-                            300: '#cbd5e1',
-                            400: '#94a3b8',
-                            500: '#64748b',
-                            600: '#475569',
-                            700: '#334155',
-                            800: '#1e293b',
-                            900: '#0f172a'
-                        }
-                    },
-                    fontFamily: {
-                        'sans': ['Inter', 'system-ui', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
-                        'card': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
-                    }
-                }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LustPath - Gestión de Expedientes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'sage': {
+              50: '#f6f7f6',
+              100: '#e3e8e3',
+              200: '#c7d2c7',
+              300: '#a3b5a3',
+              400: '#7a947a',
+              500: '#5c7a5c',
+              600: '#486148',
+              700: '#3c4f3c',
+              800: '#334033',
+              900: '#2d362d'
+            },
+            'lavender': {
+              50: '#f8f7ff',
+              100: '#f0edff',
+              200: '#e4deff',
+              300: '#d1c4ff',
+              400: '#b89fff',
+              500: '#9d75ff',
+              600: '#8b5cf6',
+              700: '#7c3aed',
+              800: '#6d28d9',
+              900: '#5b21b6'
+            },
+            'cream': {
+              50: '#fefdfb',
+              100: '#fdf9f0',
+              200: '#faf2e1',
+              300: '#f5e6c8',
+              400: '#eed5a3',
+              500: '#e4c078',
+              600: '#d4a853',
+              700: '#b8923d',
+              800: '#957635',
+              900: '#7a612f'
+            },
+            'powder': {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569',
+              700: '#334155',
+              800: '#1e293b',
+              900: '#0f172a'
             }
+          },
+          fontFamily: {
+            'sans': ['Inter', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
+            'card': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+          }
         }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body class="bg-gradient-to-br from-sage-50 to-cream-50 min-h-screen font-sans">
-    <!-- Header -->
-    <header class="bg-white/80 backdrop-blur-sm shadow-soft border-b border-sage-100">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <div class="flex items-center">
-                    <div class="bg-gradient-to-br from-sage-400 to-sage-600 text-white w-12 h-12 rounded-2xl flex items-center justify-center mr-4 shadow-card">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <h1 class="text-2xl font-bold text-powder-800">LustPath</h1>
-                        <p class="text-sm text-powder-500 font-medium">Sistema Judicial</p>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-6">
-                    <div class="text-right">
-                        <span class="block text-powder-700 font-medium">Bienvenid@,  </span>
-                        <span id="user-name" class="block text-powder-700 font-medium"></span>
-                        <span id="user-role" class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-lavender-100 text-lavender-700"></span>
-                    </div>
-                    <div id="admin-menu" class="hidden flex items-center space-x-3">
-                        <button onclick="openUsersModal()" class="p-2 text-powder-400 hover:text-sage-600 hover:bg-sage-50 rounded-xl transition-all duration-200" title="Gestionar Usuarios">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-2.239"></path>
-                            </svg>
-                        </button>
-                        <button onclick="openDerivationsModal()" class="p-2 text-powder-400 hover:text-sage-600 hover:bg-sage-50 rounded-xl transition-all duration-200" title="Ver Derivaciones">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
-                            </svg>
-                        </button>
-                    </div>
-                    <button onclick="logout()" class="p-2 text-powder-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all duration-200">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
+  <!-- Header -->
+  <header class="bg-white/80 backdrop-blur-sm shadow-soft border-b border-sage-100">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <div class="flex items-center">
+          <div
+            class="bg-gradient-to-br from-sage-400 to-sage-600 text-white w-12 h-12 rounded-2xl flex items-center justify-center mr-4 shadow-card">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+              </path>
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold text-powder-800">LustPath</h1>
+            <p class="text-sm text-powder-500 font-medium">Sistema Judicial</p>
+          </div>
         </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-6 lg:px-8 py-8">
-        <!-- Navigation Tabs -->
-        <div class="mb-8">
-            <nav class="flex space-x-1 bg-white/60 backdrop-blur-sm p-1 rounded-2xl shadow-card w-fit">
-                <button onclick="showTab('dashboard')" id="dashboard-tab"
-                    class="tab-button px-6 py-3 rounded-xl font-medium text-sm transition-all duration-200 text-powder-600 hover:text-powder-800 hover:bg-white/80">
-                    <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2V9a2 2 0 00-2-2h-2a2 2 0 00-2 2v10z"></path>
-                    </svg>
-                    Dashboard
-                </button>
-                <button onclick="showTab('expedientes')" id="expedientes-tab"
-                    class="tab-button px-6 py-3 rounded-xl font-medium text-sm transition-all duration-200 bg-sage-500 text-white shadow-card">
-                    <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    Expedientes
-                </button>
-            </nav>
-        </div>
-
-        <!-- Dashboard Tab Content -->
-        <div id="dashboard-content" class="tab-content hidden">
-            <div class="mb-8">
-                <h2 class="text-3xl font-bold text-powder-800 mb-2">Dashboard</h2>
-                <p class="text-powder-600">Resumen general del sistema de expedientes judiciales</p>
-            </div>
-
-            <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-                <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-soft p-8 border border-sage-100">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <div class="w-12 h-12 bg-gradient-to-br from-lavender-400 to-lavender-600 rounded-2xl flex items-center justify-center shadow-card">
-                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="ml-6 w-0 flex-1">
-                            <dl>
-                                <dt class="text-sm font-medium text-powder-500 truncate">Total Expedientes</dt>
-                                <dd id="total-expedientes" class="text-2xl font-bold text-powder-800">-</dd>
-                            </dl>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-soft p-8 border border-sage-100">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <div class="w-12 h-12 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center shadow-card">
-                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="ml-6 w-0 flex-1">
-                            <dl>
-                                <dt class="text-sm font-medium text-powder-500 truncate">Expedientes Activos</dt>
-                                <dd id="expedientes-activos" class="text-2xl font-bold text-powder-800">-</dd>
-                            </dl>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-soft p-8 border border-sage-100">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <div class="w-12 h-12 bg-gradient-to-br from-rose-400 to-rose-600 rounded-2xl flex items-center justify-center shadow-card">
-                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="ml-6 w-0 flex-1">
-                            <dl>
-                                <dt class="text-sm font-medium text-powder-500 truncate">Expedientes Vencidos</dt>
-                                <dd id="expedientes-vencidos" class="text-2xl font-bold text-powder-800">-</dd>
-                            </dl>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-soft p-8 border border-sage-100">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <div class="w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center shadow-card">
-                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="ml-6 w-0 flex-1">
-                            <dl>
-                                <dt class="text-sm font-medium text-powder-500 truncate">Por Vencer (7 días)</dt>
-                                <dd id="expedientes-por-vencer" class="text-2xl font-bold text-powder-800">-</dd>
-                            </dl>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Charts and Recent Activity -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
-                <!-- Expedientes por Distrito -->
-                <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-soft p-8 border border-sage-100">
-                    <h3 class="text-xl font-semibold text-powder-800 mb-6">Expedientes por Distrito</h3>
-                    <div id="expedientes-por-distrito" class="space-y-4">
-                        <!-- Chart will be rendered here -->
-                    </div>
-                </div>
-
-                <!-- Expedientes Recientes -->
-                <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-soft p-8 border border-sage-100">
-                    <h3 class="text-xl font-semibold text-powder-800 mb-6">Expedientes Recientes</h3>
-                    <div id="expedientes-recientes" class="space-y-4">
-                        <!-- Recent expedientes will be rendered here -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Monthly Trend -->
-            <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-soft p-8 border border-sage-100">
-                <h3 class="text-xl font-semibold text-powder-800 mb-6">Tendencia Mensual</h3>
-                <div id="expedientes-por-mes" class="space-y-3">
-                    <!-- Monthly chart will be rendered here -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Expedientes Tab Content -->
-        <div id="expedientes-content" class="tab-content">
-        <!-- Actions Bar -->
-        <div class="flex justify-between items-center mb-8">
-            <div>
-                <h2 class="text-3xl font-bold text-powder-800 mb-2">Expedientes Judiciales</h2>
-                <p class="text-powder-600">Gestiona y supervisa todos los expedientes del sistema</p>
-            </div>
-            <button onclick="openCreateModal()" 
-                class="bg-gradient-to-r from-sage-500 to-sage-600 hover:from-sage-600 hover:to-sage-700 text-white px-6 py-3 rounded-2xl transition-all duration-200 flex items-center shadow-card hover:shadow-soft font-medium">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                </svg>
-                Nuevo Expediente
+        <div class="flex items-center space-x-6">
+          <div class="text-right">
+            <span class="block text-powder-700 font-medium">Bienvenid@, </span>
+            <span id="user-name" class="block text-powder-700 font-medium"></span>
+            <span id="user-role"
+              class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-lavender-100 text-lavender-700"></span>
+          </div>
+          <div id="admin-menu" class="hidden flex items-center space-x-3">
+            <button onclick="openUsersModal()"
+              class="p-2 text-powder-400 hover:text-sage-600 hover:bg-sage-50 rounded-xl transition-all duration-200"
+              title="Gestionar Usuarios">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-2.239"></path>
+              </svg>
             </button>
+            <button onclick="openDerivationsModal()"
+              class="p-2 text-powder-400 hover:text-sage-600 hover:bg-sage-50 rounded-xl transition-all duration-200"
+              title="Ver Derivaciones">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+              </svg>
+            </button>
+          </div>
+          <button onclick="logout()"
+            class="p-2 text-powder-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all duration-200">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+          </button>
         </div>
+      </div>
+    </div>
+  </header>
 
-        <!-- Search Bar -->
-        <div class="mb-8">
-            <div class="relative max-w-md">
-                <input type="text" id="searchInput" placeholder="Buscar expedientes..." 
-                    class="w-full pl-12 pr-4 py-4 border border-sage-200 rounded-2xl focus:ring-2 focus:ring-sage-300 focus:border-transparent bg-white/80 backdrop-blur-sm shadow-card transition-all duration-200">
-                <svg class="absolute left-4 top-4 w-5 h-5 text-powder-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-6 lg:px-8 py-8">
+    <!-- Navigation Tabs -->
+    <div class="mb-8">
+      <nav class="flex space-x-1 bg-white/60 backdrop-blur-sm p-1 rounded-2xl shadow-card w-fit">
+        <button onclick="showTab('dashboard')" id="dashboard-tab"
+          class="tab-button px-6 py-3 rounded-xl font-medium text-sm transition-all duration-200 text-powder-600 hover:text-powder-800 hover:bg-white/80">
+          <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2V9a2 2 0 00-2-2h-2a2 2 0 00-2 2v10z">
+            </path>
+          </svg>
+          Dashboard
+        </button>
+        <button onclick="showTab('expedientes')" id="expedientes-tab"
+          class="tab-button px-6 py-3 rounded-xl font-medium text-sm transition-all duration-200 bg-sage-500 text-white shadow-card">
+          <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+            </path>
+          </svg>
+          Expedientes
+        </button>
+      </nav>
+    </div>
+
+    <!-- Dashboard Tab Content -->
+    <div id="dashboard-content" class="tab-content hidden">
+      <div class="mb-8">
+        <h2 class="text-3xl font-bold text-powder-800 mb-2">Dashboard</h2>
+        <p class="text-powder-600">Resumen general del sistema de expedientes judiciales</p>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-soft p-8 border border-sage-100">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div
+                class="w-12 h-12 bg-gradient-to-br from-lavender-400 to-lavender-600 rounded-2xl flex items-center justify-center shadow-card">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                  </path>
                 </svg>
+              </div>
             </div>
-        </div>
-
-        <!-- Expedientes Table -->
-        <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-soft overflow-hidden border border-sage-100">
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-sage-100">
-                    <thead class="bg-gradient-to-r from-sage-50 to-cream-50">
-                        <tr>
-                            <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Código</th>
-                            <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Sumilla</th>
-                            <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Estado</th>
-                            <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Distrito</th>
-                            <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Fecha Registro</th>
-                            <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="expedientesTable" class="bg-white/60 divide-y divide-sage-100">
-                        <!-- Expedientes will be loaded here -->
-                    </tbody>
-                </table>
+            <div class="ml-6 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-powder-500 truncate">Total Expedientes</dt>
+                <dd id="total-expedientes" class="text-2xl font-bold text-powder-800">-</dd>
+              </dl>
             </div>
+          </div>
         </div>
-        </div>
-    </main>
 
-    <!-- Create/Edit Modal -->
-    <div id="expedienteModal" class="fixed inset-0 bg-powder-900/20 backdrop-blur-sm hidden z-50">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white rounded-3xl shadow-soft max-w-2xl w-full max-h-screen overflow-y-auto border border-sage-100">
-                <div class="p-8">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 id="modalTitle" class="text-2xl font-bold text-powder-800">Nuevo Expediente</h3>
-                        <button onclick="closeModal()" class="p-2 text-powder-400 hover:text-powder-600 hover:bg-sage-50 rounded-xl transition-all duration-200">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <form id="expedienteForm" class="space-y-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-sm font-semibold text-powder-700 mb-2">Código Expediente</label>
-                                <input type="text" name="cod_expediente" required
-                                    class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200"
-                                    placeholder="0000">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-powder-700 mb-2">Año Inicio</label>
-                                <input type="text" name="año_inicio" maxlength="4" required
-                                    class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200"
-                                    placeholder="2024">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-powder-700 mb-2">Mes Inicio</label>
-                                <input type="text" name="mes_inicio" maxlength="2" required
-                                    class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200"
-                                    placeholder="01-12">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-powder-700 mb-2">Número Secuencial</label>
-                                <input type="text" name="numero_secuencial" maxlength="3" required
-                                    class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200"
-                                    placeholder="Cuaderno actual">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-powder-700 mb-2">Distrito Judicial</label>
-                                <select name="distrito_judicial_id" required
-                                    class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
-                                    <option value="">Seleccionar distrito</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-powder-700 mb-2">Órgano Jurisdiccional</label>
-                                <select name="organo_jurisdiccional_id" required
-                                    class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
-                                    <option value="">Seleccionar órgano</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-powder-700 mb-2">Clase Procedimiento</label>
-                                <input type="text" name="clase_procedimiento" maxlength="1"
-                                    class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-powder-700 mb-2">Estado</label>
-                                <select name="estado_expediente"
-                                    class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
-                                    <option value="ACTIVO">ACTIVO</option>
-                                    <option value="ARCHIVADO">ARCHIVADO</option>
-                                    <option value="SUSPENDIDO">SUSPENDIDO</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-powder-700 mb-2">Fecha Vencimiento</label>
-                                <input type="date" name="fecha_vencimiento"
-                                    class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-powder-700 mb-2">Monto Demanda</label>
-                                <input type="number" name="monto_demanda" step="0.01"
-                                    class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-powder-700 mb-2">Sumilla</label>
-                            <textarea name="sumilla" rows="3"
-                                class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200"></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-powder-700 mb-2">Observaciones</label>
-                            <textarea name="observaciones" rows="3"
-                                class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200"></textarea>
-                        </div>
-
-                        <div class="flex justify-end space-x-4 pt-6">
-                            <button type="button" onclick="closeModal()" 
-                                class="px-6 py-3 border border-sage-200 rounded-xl text-powder-700 hover:bg-sage-50 transition-all duration-200 font-medium">
-                                Cancelar
-                            </button>
-                            <button type="submit" 
-                                class="px-6 py-3 bg-gradient-to-r from-sage-500 to-sage-600 text-white rounded-xl hover:from-sage-600 hover:to-sage-700 transition-all duration-200 font-medium shadow-card">
-                                Guardar
-                            </button>
-                        </div>
-                    </form>
-                </div>
+        <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-soft p-8 border border-sage-100">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div
+                class="w-12 h-12 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center shadow-card">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
             </div>
+            <div class="ml-6 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-powder-500 truncate">Expedientes Activos</dt>
+                <dd id="expedientes-activos" class="text-2xl font-bold text-powder-800">-</dd>
+              </dl>
+            </div>
+          </div>
         </div>
+
+        <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-soft p-8 border border-sage-100">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div
+                class="w-12 h-12 bg-gradient-to-br from-rose-400 to-rose-600 rounded-2xl flex items-center justify-center shadow-card">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="ml-6 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-powder-500 truncate">Expedientes Vencidos</dt>
+                <dd id="expedientes-vencidos" class="text-2xl font-bold text-powder-800">-</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-soft p-8 border border-sage-100">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div
+                class="w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center shadow-card">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z">
+                  </path>
+                </svg>
+              </div>
+            </div>
+            <div class="ml-6 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-powder-500 truncate">Por Vencer (7 días)</dt>
+                <dd id="expedientes-por-vencer" class="text-2xl font-bold text-powder-800">-</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts and Recent Activity -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+        <!-- Expedientes por Distrito -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-soft p-8 border border-sage-100">
+          <h3 class="text-xl font-semibold text-powder-800 mb-6">Expedientes por Distrito</h3>
+          <div id="expedientes-por-distrito" class="space-y-4">
+            <!-- Chart will be rendered here -->
+          </div>
+        </div>
+
+        <!-- Expedientes Recientes -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-soft p-8 border border-sage-100">
+          <h3 class="text-xl font-semibold text-powder-800 mb-6">Expedientes Recientes</h3>
+          <div id="expedientes-recientes" class="space-y-4">
+            <!-- Recent expedientes will be rendered here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Monthly Trend -->
+      <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-soft p-8 border border-sage-100">
+        <h3 class="text-xl font-semibold text-powder-800 mb-6">Tendencia Mensual</h3>
+        <div id="expedientes-por-mes" class="space-y-3">
+          <!-- Monthly chart will be rendered here -->
+        </div>
+      </div>
     </div>
 
-    <!-- Documents Modal -->
-    <div id="documentsModal" class="fixed inset-0 bg-powder-900/20 backdrop-blur-sm hidden z-50">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white rounded-3xl shadow-soft max-w-4xl w-full max-h-screen overflow-y-auto border border-sage-100">
-                <div class="p-8">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-2xl font-bold text-powder-800">Documentos del Expediente</h3>
-                        <button onclick="closeDocumentsModal()" class="p-2 text-powder-400 hover:text-powder-600 hover:bg-sage-50 rounded-xl transition-all duration-200">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <!-- Upload Form -->
-                    <div class="mb-8 p-6 bg-gradient-to-r from-sage-50 to-cream-50 rounded-2xl border border-sage-100">
-                        <h4 class="font-semibold text-powder-800 mb-4">Subir Nuevo Documento</h4>
-                        <form id="uploadForm" enctype="multipart/form-data" class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-semibold text-powder-700 mb-2">Nombre del Documento</label>
-                                <input type="text" name="nombre_documento" required
-                                    class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-powder-700 mb-2">Archivo PDF</label>
-                                <input type="file" name="documento" accept=".pdf" required
-                                    class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
-                            </div>
-                            <button type="submit" 
-                                class="bg-gradient-to-r from-sage-500 to-sage-600 hover:from-sage-600 hover:to-sage-700 text-white px-6 py-3 rounded-xl transition-all duration-200 font-medium shadow-card">
-                                Subir Documento
-                            </button>
-                        </form>
-                    </div>
-
-                    <!-- Documents List -->
-                    <div id="documentsList" class="space-y-4">
-                        <!-- Documents will be loaded here -->
-                    </div>
-                </div>
-            </div>
+    <!-- Expedientes Tab Content -->
+    <div id="expedientes-content" class="tab-content">
+      <!-- Actions Bar -->
+      <div class="flex justify-between items-center mb-8">
+        <div>
+          <h2 class="text-3xl font-bold text-powder-800 mb-2">Expedientes Judiciales</h2>
+          <p class="text-powder-600">Gestiona y supervisa todos los expedientes del sistema</p>
         </div>
-    </div>
+        <button onclick="openCreateModal()"
+          class="bg-gradient-to-r from-sage-500 to-sage-600 hover:from-sage-600 hover:to-sage-700 text-white px-6 py-3 rounded-2xl transition-all duration-200 flex items-center shadow-card hover:shadow-soft font-medium">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          Nuevo Expediente
+        </button>
+      </div>
 
-    <!-- Users Management Modal -->
-    <div id="usersModal" class="fixed inset-0 bg-powder-900/20 backdrop-blur-sm hidden z-50">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white rounded-3xl shadow-soft max-w-4xl w-full max-h-screen overflow-y-auto border border-sage-100">
-                <div class="p-8">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-2xl font-bold text-powder-800">Gestión de Usuarios</h3>
-                        <button onclick="closeUsersModal()" class="p-2 text-powder-400 hover:text-powder-600 hover:bg-sage-50 rounded-xl transition-all duration-200">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <!-- Add User Form -->
-                    <div class="mb-8 p-6 bg-gradient-to-r from-sage-50 to-cream-50 rounded-2xl border border-sage-100">
-                        <h4 class="font-semibold text-powder-800 mb-4">Agregar Nuevo Usuario</h4>
-                        <form id="userForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-sm font-semibold text-powder-700 mb-2">Email</label>
-                                <input type="email" name="email" required
-                                    class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-powder-700 mb-2">Contraseña</label>
-                                <input type="password" name="password" required
-                                    class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-powder-700 mb-2">Nombre Completo</label>
-                                <input type="text" name="nombre" required
-                                    class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-powder-700 mb-2">Rol</label>
-                                <select name="rol_sistema" required
-                                    class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
-                                    <option value="USUARIO">Usuario</option>
-                                    <option value="ADMIN">Administrador</option>
-                                </select>
-                            </div>
-                            <div class="md:col-span-2">
-                                <button type="submit" 
-                                    class="bg-gradient-to-r from-sage-500 to-sage-600 hover:from-sage-600 hover:to-sage-700 text-white px-6 py-3 rounded-xl transition-all duration-200 font-medium shadow-card">
-                                    Crear Usuario
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Users List -->
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-sage-100">
-                            <thead class="bg-gradient-to-r from-sage-50 to-cream-50">
-                                <tr>
-                                    <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Usuario</th>
-                                    <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Email</th>
-                                    <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Rol</th>
-                                    <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Estado</th>
-                                    <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="usersTable" class="bg-white/60 divide-y divide-sage-100">
-                                <!-- Users will be loaded here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+      <!-- Search Bar -->
+      <div class="mb-8">
+        <div class="relative max-w-md">
+          <input type="text" id="searchInput" placeholder="Buscar expedientes..."
+            class="w-full pl-12 pr-4 py-4 border border-sage-200 rounded-2xl focus:ring-2 focus:ring-sage-300 focus:border-transparent bg-white/80 backdrop-blur-sm shadow-card transition-all duration-200">
+          <svg class="absolute left-4 top-4 w-5 h-5 text-powder-400" fill="none" stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
         </div>
-    </div>
+      </div>
 
-    <!-- Derive Expediente Modal -->
-    <div id="deriveModal" class="fixed inset-0 bg-powder-900/20 backdrop-blur-sm hidden z-50">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white rounded-3xl shadow-soft max-w-md w-full border border-sage-100">
-                <div class="p-8">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-2xl font-bold text-powder-800">Derivar Expediente</h3>
-                        <button onclick="closeDeriveModal()" class="p-2 text-powder-400 hover:text-powder-600 hover:bg-sage-50 rounded-xl transition-all duration-200">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <form id="deriveForm" class="space-y-6">
-                        <div>
-                            <label class="block text-sm font-semibold text-powder-700 mb-2">Expediente</label>
-                            <input type="text" id="derive-expediente" readonly
-                                class="w-full px-4 py-3 border border-sage-200 rounded-xl bg-sage-50 transition-all duration-200">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-powder-700 mb-2">Usuario Destino</label>
-                            <select name="usuario_destino" required
-                                class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
-                                <option value="">Seleccionar usuario</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-powder-700 mb-2">Motivo de Derivación</label>
-                            <textarea name="motivo" rows="3" required
-                                class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200"></textarea>
-                        </div>
-                        <div class="flex justify-end space-x-4">
-                            <button type="button" onclick="closeDeriveModal()" 
-                                class="px-6 py-3 border border-sage-200 rounded-xl text-powder-700 hover:bg-sage-50 transition-all duration-200 font-medium">
-                                Cancelar
-                            </button>
-                            <button type="submit" 
-                                class="px-6 py-3 bg-gradient-to-r from-sage-500 to-sage-600 text-white rounded-xl hover:from-sage-600 hover:to-sage-700 transition-all duration-200 font-medium shadow-card">
-                                Derivar
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+      <!-- Expedientes Table -->
+      <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-soft overflow-hidden border border-sage-100">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-sage-100">
+            <thead class="bg-gradient-to-r from-sage-50 to-cream-50">
+              <tr>
+                <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Código
+                </th>
+                <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Sumilla
+                </th>
+                <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Estado
+                </th>
+                <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Distrito
+                </th>
+                <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Fecha
+                  Registro</th>
+                <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody id="expedientesTable" class="bg-white/60 divide-y divide-sage-100">
+              <!-- Expedientes will be loaded here -->
+            </tbody>
+          </table>
         </div>
+      </div>
     </div>
+  </main>
 
-    <!-- Derivations Modal -->
-    <div id="derivationsModal" class="fixed inset-0 bg-powder-900/20 backdrop-blur-sm hidden z-50">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white rounded-3xl shadow-soft max-w-6xl w-full max-h-screen overflow-y-auto border border-sage-100">
-                <div class="p-8">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-2xl font-bold text-powder-800">Derivaciones de Expedientes</h3>
-                        <button onclick="closeDerivationsModal()" class="p-2 text-powder-400 hover:text-powder-600 hover:bg-sage-50 rounded-xl transition-all duration-200">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        </button>
-                    </div>
+  <!-- Create/Edit Modal -->
+  <div id="expedienteModal" class="fixed inset-0 bg-powder-900/20 backdrop-blur-sm hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div
+        class="bg-white rounded-3xl shadow-soft max-w-2xl w-full max-h-screen overflow-y-auto border border-sage-100">
+        <div class="p-8">
+          <div class="flex justify-between items-center mb-6">
+            <h3 id="modalTitle" class="text-2xl font-bold text-powder-800">Nuevo Expediente</h3>
+            <button onclick="closeModal()"
+              class="p-2 text-powder-400 hover:text-powder-600 hover:bg-sage-50 rounded-xl transition-all duration-200">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
 
-                    <!-- Derivations List -->
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-sage-100">
-                            <thead class="bg-gradient-to-r from-sage-50 to-cream-50">
-                                <tr>
-                                    <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Expediente</th>
-                                    <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">De</th>
-                                    <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Para</th>
-                                    <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Estado</th>
-                                    <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Fecha</th>
-                                    <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="derivationsTable" class="bg-white/60 divide-y divide-sage-100">
-                                <!-- Derivations will be loaded here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+          <form id="expedienteForm" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-semibold text-powder-700 mb-2">Código Expediente</label>
+                <input type="text" name="cod_expediente" required
+                  class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200"
+                  placeholder="0000">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-powder-700 mb-2">Año Inicio</label>
+                <input type="text" name="año_inicio" maxlength="4" required
+                  class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200"
+                  placeholder="2024">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-powder-700 mb-2">Mes Inicio</label>
+                <input type="text" name="mes_inicio" maxlength="2" required
+                  class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200"
+                  placeholder="01-12">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-powder-700 mb-2">Número Secuencial</label>
+                <input type="text" name="numero_secuencial" maxlength="3" required
+                  class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200"
+                  placeholder="Cuaderno actual">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-powder-700 mb-2">Distrito Judicial</label>
+                <select name="distrito_judicial_id" required
+                  class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
+                  <option value="">Seleccionar distrito</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-powder-700 mb-2">Órgano Jurisdiccional</label>
+                <select name="organo_jurisdiccional_id" required
+                  class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
+                  <option value="">Seleccionar órgano</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-powder-700 mb-2">Clase Procedimiento</label>
+                <input type="text" name="clase_procedimiento" maxlength="1"
+                  class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-powder-700 mb-2">Estado</label>
+                <select name="estado_expediente"
+                  class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
+                  <option value="ACTIVO">ACTIVO</option>
+                  <option value="ARCHIVADO">ARCHIVADO</option>
+                  <option value="SUSPENDIDO">SUSPENDIDO</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-powder-700 mb-2">Fecha Vencimiento</label>
+                <input type="date" name="fecha_vencimiento"
+                  class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-powder-700 mb-2">Monto Demanda</label>
+                <input type="number" name="monto_demanda" step="0.01"
+                  class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
+              </div>
             </div>
-        </div>
-    </div>
+            <div>
+              <label class="block text-sm font-semibold text-powder-700 mb-2">Sumilla</label>
+              <textarea name="sumilla" rows="3"
+                class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200"></textarea>
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-powder-700 mb-2">Observaciones</label>
+              <textarea name="observaciones" rows="3"
+                class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200"></textarea>
+            </div>
 
-    <script src="app.js"></script>
+            <div class="flex justify-end space-x-4 pt-6">
+              <button type="button" onclick="closeModal()"
+                class="px-6 py-3 border border-sage-200 rounded-xl text-powder-700 hover:bg-sage-50 transition-all duration-200 font-medium">
+                Cancelar
+              </button>
+              <button type="submit"
+                class="px-6 py-3 bg-gradient-to-r from-sage-500 to-sage-600 text-white rounded-xl hover:from-sage-600 hover:to-sage-700 transition-all duration-200 font-medium shadow-card">
+                Guardar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Documents Modal -->
+  <div id="documentsModal" class="fixed inset-0 bg-powder-900/20 backdrop-blur-sm hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div
+        class="bg-white rounded-3xl shadow-soft max-w-4xl w-full max-h-screen overflow-y-auto border border-sage-100">
+        <div class="p-8">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold text-powder-800">Documentos del Expediente</h3>
+            <button onclick="closeDocumentsModal()"
+              class="p-2 text-powder-400 hover:text-powder-600 hover:bg-sage-50 rounded-xl transition-all duration-200">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Upload Form -->
+          <div class="mb-8 p-6 bg-gradient-to-r from-sage-50 to-cream-50 rounded-2xl border border-sage-100">
+            <h4 class="font-semibold text-powder-800 mb-4">Subir Nuevo Documento</h4>
+            <form id="uploadForm" enctype="multipart/form-data" class="space-y-4">
+              <div>
+                <label class="block text-sm font-semibold text-powder-700 mb-2">Nombre del Documento</label>
+                <input type="text" name="nombre_documento" required
+                  class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-powder-700 mb-2">Archivo PDF</label>
+                <input type="file" name="documento" accept=".pdf" required
+                  class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
+              </div>
+              <button type="submit"
+                class="bg-gradient-to-r from-sage-500 to-sage-600 hover:from-sage-600 hover:to-sage-700 text-white px-6 py-3 rounded-xl transition-all duration-200 font-medium shadow-card">
+                Subir Documento
+              </button>
+            </form>
+          </div>
+
+          <!-- Documents List -->
+          <div id="documentsList" class="space-y-4">
+            <!-- Documents will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Users Management Modal -->
+  <div id="usersModal" class="fixed inset-0 bg-powder-900/20 backdrop-blur-sm hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div
+        class="bg-white rounded-3xl shadow-soft max-w-4xl w-full max-h-screen overflow-y-auto border border-sage-100">
+        <div class="p-8">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold text-powder-800">Gestión de Usuarios</h3>
+            <button onclick="closeUsersModal()"
+              class="p-2 text-powder-400 hover:text-powder-600 hover:bg-sage-50 rounded-xl transition-all duration-200">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Add User Form -->
+          <div class="mb-8 p-6 bg-gradient-to-r from-sage-50 to-cream-50 rounded-2xl border border-sage-100">
+            <h4 class="font-semibold text-powder-800 mb-4">Agregar Nuevo Usuario</h4>
+            <form id="userForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-semibold text-powder-700 mb-2">Email</label>
+                <input type="email" name="email" required
+                  class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-powder-700 mb-2">Contraseña</label>
+                <input type="password" name="password" required
+                  class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-powder-700 mb-2">Nombre Completo</label>
+                <input type="text" name="nombre" required
+                  class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-powder-700 mb-2">Rol</label>
+                <select name="rol_sistema" required
+                  class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
+                  <option value="USUARIO">Usuario</option>
+                  <option value="ADMIN">Administrador</option>
+                </select>
+              </div>
+              <div class="md:col-span-2">
+                <button type="submit"
+                  class="bg-gradient-to-r from-sage-500 to-sage-600 hover:from-sage-600 hover:to-sage-700 text-white px-6 py-3 rounded-xl transition-all duration-200 font-medium shadow-card">
+                  Crear Usuario
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Users List -->
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-sage-100">
+              <thead class="bg-gradient-to-r from-sage-50 to-cream-50">
+                <tr>
+                  <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Usuario
+                  </th>
+                  <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Email
+                  </th>
+                  <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Rol
+                  </th>
+                  <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Estado
+                  </th>
+                  <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">
+                    Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="usersTable" class="bg-white/60 divide-y divide-sage-100">
+                <!-- Users will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Derive Expediente Modal -->
+  <div id="deriveModal" class="fixed inset-0 bg-powder-900/20 backdrop-blur-sm hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div class="bg-white rounded-3xl shadow-soft max-w-md w-full border border-sage-100">
+        <div class="p-8">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold text-powder-800">Derivar Expediente</h3>
+            <button onclick="closeDeriveModal()"
+              class="p-2 text-powder-400 hover:text-powder-600 hover:bg-sage-50 rounded-xl transition-all duration-200">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+
+          <form id="deriveForm" class="space-y-6">
+            <div>
+              <label class="block text-sm font-semibold text-powder-700 mb-2">Expediente</label>
+              <input type="text" id="derive-expediente" readonly
+                class="w-full px-4 py-3 border border-sage-200 rounded-xl bg-sage-50 transition-all duration-200">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-powder-700 mb-2">Usuario Destino</label>
+              <select name="usuario_destino" required
+                class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200">
+                <option value="">Seleccionar usuario</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-powder-700 mb-2">Motivo de Derivación</label>
+              <textarea name="motivo" rows="3" required
+                class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-300 focus:border-transparent transition-all duration-200"></textarea>
+            </div>
+            <div class="flex justify-end space-x-4">
+              <button type="button" onclick="closeDeriveModal()"
+                class="px-6 py-3 border border-sage-200 rounded-xl text-powder-700 hover:bg-sage-50 transition-all duration-200 font-medium">
+                Cancelar
+              </button>
+              <button type="submit"
+                class="px-6 py-3 bg-gradient-to-r from-sage-500 to-sage-600 text-white rounded-xl hover:from-sage-600 hover:to-sage-700 transition-all duration-200 font-medium shadow-card">
+                Derivar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Derivations Modal -->
+  <div id="derivationsModal" class="fixed inset-0 bg-powder-900/20 backdrop-blur-sm hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div
+        class="bg-white rounded-3xl shadow-soft max-w-6xl w-full max-h-screen overflow-y-auto border border-sage-100">
+        <div class="p-8">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold text-powder-800">Derivaciones de Expedientes</h3>
+            <button onclick="closeDerivationsModal()"
+              class="p-2 text-powder-400 hover:text-powder-600 hover:bg-sage-50 rounded-xl transition-all duration-200">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Derivations List -->
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-sage-100">
+              <thead class="bg-gradient-to-r from-sage-50 to-cream-50">
+                <tr>
+                  <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">
+                    Expediente</th>
+                  <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">De</th>
+                  <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Para
+                  </th>
+                  <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Estado
+                  </th>
+                  <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">Fecha
+                  </th>
+                  <th class="px-8 py-5 text-left text-xs font-semibold text-powder-600 uppercase tracking-wider">
+                    Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="derivationsTable" class="bg-white/60 divide-y divide-sage-100">
+                <!-- Derivations will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
 </body>
+
 </html>
