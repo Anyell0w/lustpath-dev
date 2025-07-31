@@ -85,7 +85,7 @@ db.serialize(() => {
   // Tabla Expediente - Simplificada
   db.run(`CREATE TABLE IF NOT EXISTS Expediente (
     cod_expediente VARCHAR(20) PRIMARY KEY,
-    año_expediente CHAR(4) NOT NULL,
+    año_inicio CHAR(4) NOT NULL,
     distrito_judicial_id INTEGER,
     estado_expediente VARCHAR(50) DEFAULT 'ACTIVO',
     fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -130,12 +130,9 @@ db.serialize(() => {
 
   // Insertar datos iniciales
   const distritos = [
-    ['Lima', 'LIM'], ['Callao', 'CAL'], ['Arequipa', 'ARE'], ['Trujillo', 'TRU'],
-    ['Cusco', 'CUS'], ['Piura', 'PIU'], ['Ica', 'ICA'], ['Lambayeque', 'LAM']
   ];
 
   const organismos = [
-    ['Juzgado Civil', 'JC'], ['Juzgado Penal', 'JP'], ['Juzgado Laboral', 'JL'],
     ['Juzgado de Familia', 'JF'], ['Sala Civil', 'SC'], ['Sala Penal', 'SP']
   ];
 
@@ -297,7 +294,7 @@ app.get('/api/expedientes/:cod', requireAuth, (req, res) => {
 
 app.post('/api/expedientes', requireAuth, (req, res) => {
   const {
-    cod_expediente, año_expediente, distrito_judicial_id,
+    cod_expediente, año_inicio, distrito_judicial_id,
     fecha_vencimiento, sumilla, observaciones, monto_demanda
   } = req.body;
 
@@ -320,13 +317,13 @@ app.post('/api/expedientes', requireAuth, (req, res) => {
       // Insertar expediente
       const query = `
         INSERT INTO Expediente (
-          cod_expediente, año_expediente, distrito_judicial_id,
+          cod_expediente, año_inicio, distrito_judicial_id,
           fecha_vencimiento, sumilla, observaciones, monto_demanda, usuario_creador
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `;
 
       db.run(query, [
-        año_expediente, distrito_judicial_id,
+        año_inicio, distrito_judicial_id,
         fecha_vencimiento, sumilla, observaciones, monto_demanda, req.session.user.id_usuario
       ], function(err) {
         if (err) {
@@ -342,19 +339,19 @@ app.post('/api/expedientes', requireAuth, (req, res) => {
 
 app.put('/api/expedientes/:cod', requireAuth, (req, res) => {
   const {
-    año_expediente, distrito_judicial_id, estado_expediente,
+    año_inicio, distrito_judicial_id, estado_expediente,
     fecha_vencimiento, sumilla, observaciones, monto_demanda
   } = req.body;
 
   const query = `
     UPDATE Expediente SET
-      año_expediente = ?, distrito_judicial_id = ?, estado_expediente = ?,
+      año_inicio = ?, distrito_judicial_id = ?, estado_expediente = ?,
       fecha_vencimiento = ?, sumilla = ?, observaciones = ?, monto_demanda = ?
     WHERE cod_expediente = ?
   `;
 
   db.run(query, [
-    año_expediente, distrito_judicial_id, estado_expediente,
+    año_inicio, distrito_judicial_id, estado_expediente,
     fecha_vencimiento, sumilla, observaciones, monto_demanda, req.params.cod
   ], function(err) {
     if (err) {
