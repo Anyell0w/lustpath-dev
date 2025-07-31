@@ -143,29 +143,6 @@ LEFT JOIN ParticipanteExpediente pe ON e.cod_expediente = pe.cod_expediente
 LEFT JOIN Persona p ON pe.id_persona = p.id_persona
 GROUP BY e.cod_expediente;
 
-CREATE TRIGGER tr_validar_formato_expediente
-BEFORE INSERT ON Expediente
-FOR EACH ROW
-BEGIN
-    -- Verificar formato básico: AAAA-MM-DDD-NNN
-    SELECT CASE
-        WHEN NEW.cod_expediente NOT GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[A-Z][A-Z][A-Z]-[0-9][0-9][0-9]' THEN
-            RAISE(ABORT, 'Formato de código de expediente inválido. Debe ser: AAAA-MM-DDD-NNN')
-        
-        -- Verificar que el distrito judicial existe
-        WHEN NOT EXISTS (SELECT 1 FROM DistritoJudicial WHERE id_distrito = NEW.distrito_judicial_id) THEN
-            RAISE(ABORT, 'El distrito judicial especificado no existe')
-            
-        -- Verificar que el órgano jurisdiccional existe
-        WHEN NOT EXISTS (SELECT 1 FROM OrganoJurisdiccional WHERE id_organismo = NEW.organo_jurisdiccional_id) THEN
-            RAISE(ABORT, 'El órgano jurisdiccional especificado no existe')
-            
-        -- Verificar que el año y mes coincidan con el código
-        WHEN (NEW.año_inicio || '-' || NEW.mes_inicio) != substr(NEW.cod_expediente, 1, 7) THEN
-            RAISE(ABORT, 'El año y mes no coinciden con el código de expediente')
-    END;
-END;
-
 CREATE TRIGGER tr_procesar_acciones
 AFTER INSERT ON acciones_expedientes
 FOR EACH ROW
