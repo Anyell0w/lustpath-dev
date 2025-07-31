@@ -171,6 +171,102 @@ function formatDate(dateString) {
     });
 }
 
+// Modal Functions
+function openCreateModal() {
+    currentExpediente = null;
+    document.getElementById('modalTitle').textContent = 'Nuevo Expediente';
+    document.getElementById('expedienteForm').reset();
+    
+    // Enable all form fields
+    const form = document.getElementById('expedienteForm');
+    const inputs = form.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => input.disabled = false);
+    
+    // Show save button
+    const saveButton = form.querySelector('button[type="submit"]');
+    saveButton.style.display = 'inline-block';
+    
+    document.getElementById('expedienteModal').classList.remove('hidden');
+}
+
+function closeModal() {
+    document.getElementById('expedienteModal').classList.add('hidden');
+    document.getElementById('expedienteForm').reset();
+    currentExpediente = null;
+}
+
+async function viewExpediente(cod) {
+    try {
+        const response = await fetch(`/api/expedientes/${cod}`);
+        const expediente = await response.json();
+        
+        if (expediente.error) {
+            showNotification('Error al cargar expediente', 'error');
+            return;
+        }
+        
+        // Fill form with expediente data
+        const form = document.getElementById('expedienteForm');
+        Object.keys(expediente).forEach(key => {
+            const input = form.querySelector(`[name="${key}"]`);
+            if (input) {
+                input.value = expediente[key] || '';
+            }
+        });
+        
+        // Disable all form fields for view mode
+        const inputs = form.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => input.disabled = true);
+        
+        // Hide save button
+        const saveButton = form.querySelector('button[type="submit"]');
+        saveButton.style.display = 'none';
+        
+        document.getElementById('modalTitle').textContent = `Ver Expediente: ${cod}`;
+        document.getElementById('expedienteModal').classList.remove('hidden');
+    } catch (error) {
+        showNotification('Error de conexión', 'error');
+    }
+}
+
+async function editExpediente(cod) {
+    try {
+        const response = await fetch(`/api/expedientes/${cod}`);
+        const expediente = await response.json();
+        
+        if (expediente.error) {
+            showNotification('Error al cargar expediente', 'error');
+            return;
+        }
+        
+        currentExpediente = cod;
+        
+        // Fill form with expediente data
+        const form = document.getElementById('expedienteForm');
+        Object.keys(expediente).forEach(key => {
+            const input = form.querySelector(`[name="${key}"]`);
+            if (input) {
+                input.value = expediente[key] || '';
+            }
+        });
+        
+        // Enable all form fields except codigo (primary key)
+        const inputs = form.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.disabled = input.name === 'cod_expediente';
+        });
+        
+        // Show save button
+        const saveButton = form.querySelector('button[type="submit"]');
+        saveButton.style.display = 'inline-block';
+        
+        document.getElementById('modalTitle').textContent = `Editar Expediente: ${cod}`;
+        document.getElementById('expedienteModal').classList.remove('hidden');
+    } catch (error) {
+        showNotification('Error de conexión', 'error');
+    }
+}
+
 // Setup event listeners
 function setupEventListeners() {
     // Search functionality
@@ -189,12 +285,6 @@ function setupEventListeners() {
     document.getElementById('uploadForm').addEventListener('submit', handleFileUpload);
     document.getElementById('userForm').addEventListener('submit', handleUserSubmit);
     document.getElementById('deriveForm').addEventListener('submit', handleDeriveSubmit);
-    const inputs = form.querySelectorAll('input, select, textarea');
-    inputs.forEach(input => input.disabled = false);
-    
-    // Show save button
-    const saveButton = form.querySelector('button[type="submit"]');
-    saveButton.style.display = 'inline-block';
 }
 
 // Handle form submission
