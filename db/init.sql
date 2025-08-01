@@ -77,16 +77,6 @@ CREATE TABLE MovimientoExpediente (
 );
 
 -- Insertar datos iniciales para Distritos Judiciales
-INSERT INTO DistritoJudicial (nombre_distrito, codigo_distrito) VALUES
-('Lima', 'LIM'),
-('Callao', 'CAL'),
-('Arequipa', 'ARE'),
-('Trujillo', 'TRU'),
-('Cusco', 'CUS'),
-('Piura', 'PIU'),
-('Ica', 'ICA'),
-('Lambayeque', 'LAM');
-
 -- Insertar datos iniciales para Órganos Jurisdiccionales
 INSERT INTO OrganoJurisdiccional (nombre_organismo, codigo_organismo) VALUES
 ('Juzgado Civil', 'JC'),
